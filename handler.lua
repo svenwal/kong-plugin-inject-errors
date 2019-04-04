@@ -72,7 +72,9 @@ function plugin:access(config)
     if config.add_header == true then
       ngx.header["X-Kong-Random-Latency"] = latency
     end
-    ngx.sleep(latency/1000)
+    if latency > 0 then
+      ngx.sleep(latency/1000)
+    end
   else
     if config.add_header == true then
       ngx.header["X-Kong-Random-Latency"] = "none"
