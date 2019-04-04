@@ -6,12 +6,13 @@ A Kong plugin which adds a random latency to request in order to simulate bad ne
 |:----|:------:|------:|
 |config.minimum_latency_msec|0|This parameter describes the minimum latency (msec) to be added|
 |config.maximum_latency_msec|1000|This parameter describes the maximum latency (msec) to be added|
-|config.request_percentage|50|Percentage of request which shall get the latency added|
-|config.add_header|true|If set to true a header X-Kong-Random-Latency will be added with either the value of the added latency or none if random generator has chosen not to add a latency (see also config.request_percentage|
+|config.request_percentage|50|Percentage of requests which shall get the latency added|
+|config.add_header|true|If set to true a header X-Kong-Random-Latency will be added with either the value of the added latency or none if random generator has chosen not to add a latency (see also config.request_percentage)|
 
 ## Example
 ````
 > http :8001/services/httpbin/plugins name=random-latency 
+
 HTTP/1.1 201 Created
 Access-Control-Allow-Origin: *
 Connection: keep-alive
@@ -36,7 +37,8 @@ Transfer-Encoding: chunked
 ````
 Response if random generator has decided to add latency:
 `````
-http :8000/latency
+> http :8000/latency
+
 HTTP/1.1 200 OK
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: *
@@ -55,7 +57,8 @@ X-Kong-Upstream-Latency: 227
 `````
 Response if random generator decided not to add latency (see "none" in header)
 `````
-http :8000/latency
+> http :8000/latency
+
 HTTP/1.1 200 OK
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: *
