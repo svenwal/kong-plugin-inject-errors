@@ -1,4 +1,6 @@
-local function check_percentage(given_value, given_config)
+-- config input validation scripts
+
+local function validate_percentage_latency(given_value, given_config)
   local percentage = tonumber(given_value)
   if percentage == nil then
     return false, "Only numbers between 0 and 100"
@@ -12,10 +14,27 @@ local function check_percentage(given_value, given_config)
     return false, "Minimum percentage is 0"
   end
 
-  given_config.request_percentage=percentage
+  given_config.percentage_latency=percentage
 end
 
-local function check_minimum(given_value, given_config)
+local function validate_percentage_error(given_value, given_config)
+  local percentage = tonumber(given_value)
+  if percentage == nil then
+    return false, "Only numbers between 0 and 100"
+  end
+
+  if percentage > 100 then
+    return false, "Maximum percentage is 100"
+  end
+
+  if percentage < 0 then
+    return false, "Minimum percentage is 0"
+  end
+
+  given_config.percentage_error=percentage
+end
+
+local function validate_minimum(given_value, given_config)
   local minimum = tonumber(given_value)
   if minimum == nil then
     return false, "Only numbers allowed"
@@ -33,7 +52,7 @@ local function check_minimum(given_value, given_config)
   given_config.minimum_latency_msec = minimum
 end
 
-local function check_maximum(given_value, given_config)
+local function validate_maximum(given_value, given_config)
   local maximum = tonumber(given_value)
   if maximum == nil then
     return false, "Only numbers allowed"
@@ -51,19 +70,39 @@ local function check_maximum(given_value, given_config)
   given_config.maximum_latency_msec = maximum
 end
 
+local function validate_status_codes(v, t, column)
+  if v and type(v) == "table" then
+    for _, error_type in ipairs(v) do
+      local number = tonumber(error_type)
+      if number == nil then
+        return false, "Only numbers allowed"
+      end
+      if number < 100 then
+        return false, "Minimum status code is 100"
+      elseif number > 999 then
+        return false, "Maximum status code is 999"
+      end
+    end
+  end
+  return true
+end
+
+-- plugin configuration
+
+
 return {
   no_consumer = false, -- this plugin is available on APIs as well as on Consumers,
   fields = {
     -- Describe your plugin's configuration's schema here.
-    minimum_latency_msec = {type = "integer", required = true, func = check_minimum, default = 0},
-    maximum_latency_msec = {type = "integer", required = true, func = check_maximum, default = 1000},
-    request_percentage = {type = "integer", required = true, func = check_percentage, default = 50},
+    minimum_latency_msec = {type = "integer", required = true, func = validate_minimum, default = 0},
+    maximum_latency_msec = {type = "integer", required = true, func = validate_maximum, default = 1000},
+    percentage_latency = {type = "integer", required = true, func = validate_percentage_latency, default = 50},
+    status_codes = {type = "array", required = false, func = validate_status_codes },
+    percentage_error = {type = "integer", required = false, func = validate_percentage_error, default = 0},
     add_header = {type = "boolean", default = true},
     
   },
   self_check = function(schema, plugin_t, dao, is_updating)
-    -- perform any custom verification
     return true
   end
 }
-
