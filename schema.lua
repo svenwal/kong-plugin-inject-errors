@@ -11,7 +11,7 @@ end
 
 local function validate_percentage_error(given_value, given_config)
   local percentage = tonumber(given_value) or -1
-  if percentage ==  < 0 or percentage > 100 then
+  if percentage < 0 or percentage > 100 then
     return false, "Only numbers between 0 and 100"
   end
 
@@ -48,7 +48,7 @@ local function validate_status_codes(v, t, column)
   if v and type(v) == "table" then
     for _, error_type in ipairs(v) do
       local number = tonumber(error_type) or -1
-      if number ==  < 0 or number > 100 then
+      if number < 100 or number > 999 then
         return false, "Only numbers between 100 and 999 allowed"
       end
     end
