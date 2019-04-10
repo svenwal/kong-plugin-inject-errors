@@ -1,8 +1,8 @@
-package = "kong-plugins-inject-errors"
+package = "kong-plugin-inject-errors"
 version = "0.3.0-1"
 supported_platforms = {"linux", "macosx"}
 source = {
-   url = "git+https://github.com/svenwal/kong-plugins-inject-errors.git"
+   url = "git+https://github.com/svenwal/kong-plugin-inject-errors.git"
 }
 description = {
    summary = "inject-errors is a Kongplugin which adds a random latency and/or random errors to responses in order to simulate bad networks.",
@@ -16,7 +16,7 @@ description = {
 |config.percentage_error|0|Percentage of requests which shall return an error|
 |config.status_codes|500|Array of http status codes which will be used if error is returned (random selection from array)|
 |config.add_header|true|If set to true a header X-Kong-Latency-Injected will be added with either the value of the added latency or none if random generator has chosen not to add a latency. Also adds the X-Kong-Error-Injected header if http status code has been added.|]],
-   homepage = "https://github.com/svenwal/kong-plugins-inject-errors",
+   homepage = "https://github.com/svenwal/kong-plugin-inject-errors",
    license = "BSD 2-Clause License"
 }
 dependencies = {}
