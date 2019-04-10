@@ -1,6 +1,7 @@
 -- Grab pluginname from module name
 local plugin_name = "inject-errors"
 local responses = require "kong.tools.responses"
+local random = math.random
 
 -- load the base plugin object and create a subclass
 local error_injection = require("kong.plugins.base_plugin"):extend()
@@ -13,7 +14,7 @@ end
 ---[[ runs in the 'access_by_lua_block'
 function error_injection:access(config)
   error_injection.super.access(self)
-  local percentage_random_latency = math.random (100)
+  local percentage_random_latency = random (100)
 
   if config.percentage_latency > percentage_random_latency then
     local latency_diff = config.maximum_latency_msec - config.minimum_latency_msec
@@ -21,7 +22,7 @@ function error_injection:access(config)
     if latency_diff < 0 then 
       latency = 0
     else
-      latency = config.minimum_latency_msec + math.random(latency_diff)
+      latency = config.minimum_latency_msec + random(latency_diff)
     end
     if config.add_header == true then
       ngx.header["X-Kong-Latency-Injected"] = latency
@@ -35,14 +36,14 @@ function error_injection:access(config)
     end
   end 
 
-  local percentage_random_error = math.random (100)
+  local percentage_random_error = random (100)
 
   if config.percentage_error > percentage_random_error then
     local status_code = 500
     if config.status_codes == nil then
       status_code = 500
     else 
-      status_code = config.status_codes[ math.random( 1, #config.status_codes ) ]
+      status_code = config.status_codes[ random( 1, #config.status_codes ) ]
     end
     if config.add_header == true then
       ngx.header["X-Kong-Error-Injected"] = status_code

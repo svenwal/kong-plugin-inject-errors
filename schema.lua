@@ -1,47 +1,26 @@
 -- config input validation scripts
 
 local function validate_percentage_latency(given_value, given_config)
-  local percentage = tonumber(given_value)
-  if percentage == nil then
+  local percentage = tonumber(given_value) or -1
+  if percentage  < 0 or percentage > 100 then
     return false, "Only numbers between 0 and 100"
-  end
-
-  if percentage > 100 then
-    return false, "Maximum percentage is 100"
-  end
-
-  if percentage < 0 then
-    return false, "Minimum percentage is 0"
   end
 
   given_config.percentage_latency=percentage
 end
 
 local function validate_percentage_error(given_value, given_config)
-  local percentage = tonumber(given_value)
-  if percentage == nil then
+  local percentage = tonumber(given_value) or -1
+  if percentage ==  < 0 or percentage > 100 then
     return false, "Only numbers between 0 and 100"
-  end
-
-  if percentage > 100 then
-    return false, "Maximum percentage is 100"
-  end
-
-  if percentage < 0 then
-    return false, "Minimum percentage is 0"
   end
 
   given_config.percentage_error=percentage
 end
 
 local function validate_minimum(given_value, given_config)
-  local minimum = tonumber(given_value)
-  if minimum == nil then
-    return false, "Only numbers allowed"
-  end
-
-
-  if minimum < 0 then
+  local minimum = tonumber(given_value) or -1
+  if minimum <0 then
     return false, "Minimum latency must not be smaller than 0"
   end
 
@@ -53,13 +32,8 @@ local function validate_minimum(given_value, given_config)
 end
 
 local function validate_maximum(given_value, given_config)
-  local maximum = tonumber(given_value)
-  if maximum == nil then
-    return false, "Only numbers allowed"
-  end
-
-
-  if maximum < 0 then
+  local maximum = tonumber(given_value) or -1
+  if maximum <0 then
     return false, "Maximum latency must not be smaller than 0"
   end
 
@@ -73,14 +47,9 @@ end
 local function validate_status_codes(v, t, column)
   if v and type(v) == "table" then
     for _, error_type in ipairs(v) do
-      local number = tonumber(error_type)
-      if number == nil then
-        return false, "Only numbers allowed"
-      end
-      if number < 100 then
-        return false, "Minimum status code is 100"
-      elseif number > 999 then
-        return false, "Maximum status code is 999"
+      local number = tonumber(error_type) or -1
+      if number ==  < 0 or number > 100 then
+        return false, "Only numbers between 100 and 999 allowed"
       end
     end
   end
