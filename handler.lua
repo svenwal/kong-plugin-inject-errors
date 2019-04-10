@@ -18,50 +18,22 @@ function plugin:new()
 
 end
 
----------------------------------------------------------------------------------------------
--- In the code below, just remove the opening brackets; `[[` to enable a specific handler
---
--- The handlers are based on the OpenResty handlers, see the OpenResty docs for details
--- on when exactly they are invoked and what limitations each handler has.
---
--- The call to `.super.xxx(self)` is a call to the base_plugin, which does nothing, except logging
--- that the specific handler was executed.
----------------------------------------------------------------------------------------------
-
-
---[[ handles more initialization, but AFTER the worker process has been forked/created.
--- It runs in the 'init_worker_by_lua_block'
-function plugin:init_worker()
-  plugin.super.access(self)
-
-  -- your custom code here
-  
-end --]]
-
---[[ runs in the ssl_certificate_by_lua_block handler
-function plugin:certificate(plugin_conf)
-  plugin.super.access(self)
-
-  -- your custom code here
-  
-end --]]
-
---[[ runs in the 'rewrite_by_lua_block' (from version 0.10.2+)
--- IMPORTANT: during the `rewrite` phase neither the `api` nor the `consumer` will have
--- been identified, hence this handler will only be executed if the plugin is 
--- configured as a global plugin!
-function plugin:rewrite(plugin_conf)
-  plugin.super.rewrite(self)
-
-  -- your custom code here
-  
-end --]]
 
 ---[[ runs in the 'access_by_lua_block'
 function plugin:access(config)
   plugin.super.access(self)
   local percentage_random = math.random (100)
-  if config.request_percentage > percentage_random then
+
+  if config.request_percentage_error > percentage_random then
+    if #config.error_types > 0 then
+      local error_type = config.error_types[ math.random( #config.error_types ) ] )
+    else 
+      error_type = 500
+    end
+      return kong.response.exit(error_type, "")
+  end
+
+  if config.request_percentage_latency > percentage_random then
     local latency_diff = config.maximum_latency_msec - config.minimum_latency_msec
     local latency = 0
     if latency_diff < 0 then 
@@ -89,22 +61,6 @@ function plugin:header_filter(plugin_conf)
 
   -- your custom code here, for example;
 
-end --]]
-
---[[ runs in the 'body_filter_by_lua_block'
-function plugin:body_filter(plugin_conf)
-  plugin.super.access(self)
-
-  -- your custom code here
-  
-end --]]
-
---[[ runs in the 'log_by_lua_block'
-function plugin:log(plugin_conf)
-  plugin.super.access(self)
-
-  -- your custom code here
-  
 end --]]
 
 

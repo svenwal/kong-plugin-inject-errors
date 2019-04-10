@@ -57,7 +57,9 @@ return {
     -- Describe your plugin's configuration's schema here.
     minimum_latency_msec = {type = "integer", required = true, func = check_minimum, default = 0},
     maximum_latency_msec = {type = "integer", required = true, func = check_maximum, default = 1000},
-    request_percentage = {type = "integer", required = true, func = check_percentage, default = 50},
+    request_percentage_latency = {type = "integer", required = true, func = check_percentage, default = 50},
+    error_types = {type = "array", required = false, },
+    request_percentage_error = {type = "integer", required = false, func = check_percentage, default = 0},
     add_header = {type = "boolean", default = true},
     
   },
