@@ -1,4 +1,4 @@
-local function check_percentage(given_value, given_config)
+local function check_percentage_latency(given_value, given_config)
   local percentage = tonumber(given_value)
   if percentage == nil then
     return false, "Only numbers between 0 and 100"
@@ -12,7 +12,24 @@ local function check_percentage(given_value, given_config)
     return false, "Minimum percentage is 0"
   end
 
-  given_config.request_percentage=percentage
+  given_config.request_percentage_latency=percentage
+end
+
+local function check_percentage_error(given_value, given_config)
+  local percentage = tonumber(given_value)
+  if percentage == nil then
+    return false, "Only numbers between 0 and 100"
+  end
+
+  if percentage > 100 then
+    return false, "Maximum percentage is 100"
+  end
+
+  if percentage < 0 then
+    return false, "Minimum percentage is 0"
+  end
+
+  given_config.request_percentage_error=percentage
 end
 
 local function check_minimum(given_value, given_config)
@@ -58,7 +75,7 @@ return {
     minimum_latency_msec = {type = "integer", required = true, func = check_minimum, default = 0},
     maximum_latency_msec = {type = "integer", required = true, func = check_maximum, default = 1000},
     request_percentage_latency = {type = "integer", required = true, func = check_percentage, default = 50},
-    error_types = {type = "array", required = false, },
+    error_types = {type = "array", required = false },
     request_percentage_error = {type = "integer", required = false, func = check_percentage, default = 0},
     add_header = {type = "boolean", default = true},
     
