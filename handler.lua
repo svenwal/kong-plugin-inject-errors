@@ -1,5 +1,5 @@
 -- Grab pluginname from module name
-local plugin_name = inject-errors
+local plugin_name = "inject-errors"
 local responses = require "kong.tools.responses"
 
 -- load the base plugin object and create a subclass
@@ -53,7 +53,7 @@ function error_injection:access(config)
 end --]]
 
 -- set the plugin priority, which determines plugin execution order
-error_injection.PRIORITY = 200
+error_injection.PRIORITY = 995
 
 -- return our plugin object
 return error_injection
