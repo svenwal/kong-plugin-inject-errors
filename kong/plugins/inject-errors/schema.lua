@@ -63,11 +63,11 @@ return {
   no_consumer = false, -- this plugin is available on APIs as well as on Consumers,
   fields = {
     -- Describe your plugin's configuration's schema here.
-    minimum_latency_msec = {type = "integer", required = true, func = validate_minimum, default = 0},
-    maximum_latency_msec = {type = "integer", required = true, func = validate_maximum, default = 1000},
-    percentage_latency = {type = "integer", required = true, func = validate_percentage_latency, default = 50},
+    minimum_latency_msec = {type = "number", required = true, func = validate_minimum, default = 0},
+    maximum_latency_msec = {type = "number", required = true, func = validate_maximum, default = 1000},
+    percentage_latency = {type = "number", required = true, func = validate_percentage_latency, default = 50},
     status_codes = {type = "array", required = false, func = validate_status_codes },
-    percentage_error = {type = "integer", required = false, func = validate_percentage_error, default = 0},
+    percentage_error = {type = "number", required = false, func = validate_percentage_error, default = 0},
     add_header = {type = "boolean", default = true},
     
   },
