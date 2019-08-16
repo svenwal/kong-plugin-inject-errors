@@ -47,7 +47,7 @@ function error_injection:access(config)
     if config.add_header == true then
       kong.response.add_header("X-Kong-Error-Injected",status_code)
     end
-    return kong.response.exit(tonumber(status_code)
+    return kong.response.exit(tonumber(status_code))
   end
   
 end --]]
