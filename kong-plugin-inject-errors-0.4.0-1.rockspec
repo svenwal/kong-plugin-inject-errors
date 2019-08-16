@@ -1,5 +1,6 @@
 package = "kong-plugin-inject-errors"
-version = "0.3.0-1"
+local pluginName = package:match("^kong%-plugin%-(.+)$")
+version = "0.4.0-1"
 supported_platforms = {"linux", "macosx"}
 source = {
    url = "git+https://github.com/svenwal/kong-plugin-inject-errors.git"
@@ -19,11 +20,14 @@ description = {
    homepage = "https://github.com/svenwal/kong-plugin-inject-errors",
    license = "BSD 2-Clause License"
 }
+
 dependencies = {}
+
 build = {
-   type = "builtin",
-   modules = {
-      handler = "handler.lua",
-      schema = "schema.lua"
-   }
+  type = "builtin",
+  modules = {
+    -- TODO: add any additional files that the plugin consists of
+    ["kong.plugins."..pluginName..".handler"] = "kong/plugins/"..pluginName.."/handler.lua",
+    ["kong.plugins."..pluginName..".schema"] = "kong/plugins/"..pluginName.."/schema.lua",
+  }
 }

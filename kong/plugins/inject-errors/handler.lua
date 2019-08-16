@@ -1,6 +1,5 @@
 -- Grab pluginname from module name
 local plugin_name = "inject-errors"
-local responses = require "kong.tools.responses"
 local random = math.random
 
 -- load the base plugin object and create a subclass
@@ -25,14 +24,14 @@ function error_injection:access(config)
       latency = config.minimum_latency_msec + random(latency_diff)
     end
     if config.add_header == true then
-      ngx.header["X-Kong-Latency-Injected"] = latency
+      kong.response.add_header("X-Kong-Latency-Injected"], latency)
     end
     if latency > 0 then
       ngx.sleep(latency/1000)
     end
   else
     if config.add_header == true then
-      ngx.header["X-Kong-Latency-Injected"] = "none"
+      kong.response.add_header("X-Kong-Latency-Injected"],"none")
     end
   end 
 
@@ -46,9 +45,9 @@ function error_injection:access(config)
       status_code = config.status_codes[ random( 1, #config.status_codes ) ]
     end
     if config.add_header == true then
-      ngx.header["X-Kong-Error-Injected"] = status_code
+      kong.response.add_header("X-Kong-Error-Injected"],status_code)
     end
-    return responses.send(tonumber(status_code))
+    return kong.response.exit(tonumber(status_code)
   end
   
 end --]]
