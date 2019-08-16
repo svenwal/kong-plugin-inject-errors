@@ -24,14 +24,14 @@ function error_injection:access(config)
       latency = config.minimum_latency_msec + random(latency_diff)
     end
     if config.add_header == true then
-      kong.response.add_header("X-Kong-Latency-Injected", latency)
+      kong.request.add_header("X-Kong-Latency-Injected", latency)
     end
     if latency > 0 then
       ngx.sleep(latency/1000)
     end
   else
     if config.add_header == true then
-      kong.response.add_header("X-Kong-Latency-Injected","none")
+      kong.request.add_header("X-Kong-Latency-Injected","none")
     end
   end 
 
@@ -45,7 +45,7 @@ function error_injection:access(config)
       status_code = config.status_codes[ random( 1, #config.status_codes ) ]
     end
     if config.add_header == true then
-      kong.response.add_header("X-Kong-Error-Injected",status_code)
+      kong.request.add_header("X-Kong-Error-Injected",status_code)
     end
     return kong.response.exit(tonumber(status_code))
   end
